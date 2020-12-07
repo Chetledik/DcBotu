@@ -16,13 +16,8 @@ token = os.getenv("DISCORD_BOT_TOKEN")
 
 
 if token == None:
-    print("Za")
     f = open("token","r")
     token = f.readline()
-    print(token)
-else:
-    print(token)
-
 
 @client.event
 async def on_ready() :

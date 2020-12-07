@@ -10,19 +10,33 @@ def switch(value):
             2:'ilahi mi açtın mübarek?'}
     return cases[value]
 
-
+seriatOn = True
 client = commands.Bot(command_prefix=".")
 token = os.getenv("DISCORD_BOT_TOKEN")
 
 
 if token == None:
+    print("Za")
     f = open("token","r")
     token = f.readline()
+    print(token)
+else:
+    print(token)
+
 
 @client.event
 async def on_ready() :
     await client.change_presence(status = discord.Status.idle, activity = discord.Game("Listening to .help"))
     print("I am online")
+
+@client.command()
+async def seriat(ctx):
+    if seriatOn:
+        seriatOn = False
+        await ctx.send(f"Şeriatı kaldırdık!")
+    else:
+        seriatOn = True
+        await ctx.send(f"Şeriat yükleniyor...")
 
 @client.command()
 async def ping(ctx) :
@@ -38,20 +52,20 @@ async def clear(ctx, amount=3) :
 
 @client.event
 async def on_message(message):
-    
-    matchlist = ["s.a|sa|s.a.|selamın aleyküm|Selamın aleyküm", "TEKBİR|tekbir", "-p"]
+    if seriatOn:
+        matchlist = ["s.a|sa|s.a.|selamın aleyküm|Selamın aleyküm", "TEKBİR|tekbir", "-p"]
 
-    count = 0
-    for x in matchlist:
-        matched = re.match(x, message.content)
-        if(bool(matched)):
-            response = switch(count)
-            if count == 2:
-                if random.randint(0, 100)%11!=0:
-                    break
-            await message.channel.send(response)
-            break
-        count += 1
+        count = 0
+        for x in matchlist:
+            matched = re.match(x, message.content)
+            if(bool(matched)):
+                response = switch(count)
+                if count == 2:
+                    if random.randint(0, 100)%11!=0:
+                        break
+                await message.channel.send(response)
+                break
+            count += 1
     await client.process_commands(message)
 
     
